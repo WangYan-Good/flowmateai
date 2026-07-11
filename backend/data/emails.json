@@ -1,0 +1,21 @@
+[
+  {
+    "id": "001",
+    "from": "customer@example.com",
+    "subject": "Project Delivery Delay",
+    "body": "The customer requested a two-week delivery delay and needs a revised timeline today."
+  },
+  {
+    "id": "002",
+    "from": "manager@example.com",
+    "subject": "Architecture Review",
+    "body": "Please review the architecture proposal before Friday and schedule a decision meeting."
+  },
+  {
+    "id": "003",
+    "from": "newsletter@example.com",
+    "subject": "Engineering Weekly",
+    "body": "This week's newsletter includes platform updates and upcoming internal events."
+  }
+]
+

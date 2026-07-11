@@ -1,0 +1,48 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "0.1.0",
+  "id": "${MICROSOFT_APP_ID}",
+  "packageName": "com.example.flowmate",
+  "developer": {
+    "name": "Your Company",
+    "websiteUrl": "https://YOUR_PUBLIC_HOST",
+    "privacyUrl": "https://YOUR_PUBLIC_HOST/privacy",
+    "termsOfUseUrl": "https://YOUR_PUBLIC_HOST/terms"
+  },
+  "name": {
+    "short": "FlowMate",
+    "full": "FlowMate AI Email Assistant"
+  },
+  "description": {
+    "short": "Summarize unread email with GPT-OSS-120B.",
+    "full": "FlowMate reads configured email data and returns a structured daily summary in Microsoft Teams."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#6264A7",
+  "bots": [
+    {
+      "botId": "${MICROSOFT_APP_ID}",
+      "scopes": ["personal", "team", "groupchat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        {
+          "scopes": ["personal", "team", "groupchat"],
+          "commands": [
+            {
+              "title": "summarize my emails",
+              "description": "Generate today's email summary"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["YOUR_PUBLIC_HOST"]
+}
+
