@@ -43,7 +43,7 @@ Windows（允许在宿主机运行，双击或在 CMD/PowerShell 中执行）：
 .\start-windows.cmd -Provider Qwen
 ```
 
-脚本会检查 Python 3.11+、创建 `.venv`、安装依赖、生成 `.env` 并启动 FastAPI。第一次选择云模型后，脚本会要求先在 `.env` 中填写 API Key。运行宿主机测试：
+脚本会检查当前已激活的 Conda 环境（Python 3.11+）、安装依赖、生成 `.env` 并启动 FastAPI，不再创建 `.venv`。第一次选择云模型后，脚本会要求先在 `.env` 中填写 API Key。运行宿主机测试：
 
 ```powershell
 .\start-windows.cmd Test
@@ -69,6 +69,17 @@ chmod +x start-linux.sh
 Linux 首次运行会根据 profile 从 `.env.deepseek.example`、`.env.qwen.example` 或 `.env.example` 生成 `.env`。填写 API Key 后再次执行相同命令。已有 `.env` 时不会覆盖；切换 provider 前请备份并删除旧 `.env`。
 
 ### 手动启动
+
+Windows（Conda）：
+
+```powershell
+conda activate flowmate
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
+```
+
+Linux/macOS（venv）：
 
 Python 3.11+：
 
@@ -107,7 +118,7 @@ conda activate flowmate
 python -m pip check
 ```
 
-Conda 环境下不要运行 `start-windows.cmd`，因为该脚本会另外创建并使用 `.venv`。请在激活 `flowmate` 后直接执行上面的 `python -m uvicorn` 命令。若 pip 显示 `from versions: none`，说明当前 pip 源或公司代理不可用，并非 Pydantic 不支持 Python 3.11；先检查 `python -m pip config list -v` 和代理配置。
+在 Conda 环境下可以直接运行 `start-windows.cmd`；脚本会复用当前已激活环境，不会创建额外虚拟环境。若 pip 显示 `from versions: none`，说明当前 pip 源或公司代理不可用，并非 Pydantic 不支持 Python 3.11；先检查 `python -m pip config list -v` 和代理配置。
 
 或使用 Docker：
 
