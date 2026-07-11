@@ -228,6 +228,17 @@ curl -X POST http://localhost:8000/api/email/summary
 https://PUBLIC_HOST/api/messages -> http://localhost:8000/api/messages
 ```
 
+本地 Tunnel 测试必须先取得公网 HTTPS 域名，再配置和打包。推荐顺序如下：
+
+1. 启动 FlowMate 后端。
+2. 启动 ngrok 或 Cloudflare Tunnel，取得 `https://PUBLIC_HOST`。
+3. 通过公网 `/health` 验证 Tunnel。
+4. 将 Azure Bot Messaging endpoint 配置为 `https://PUBLIC_HOST/api/messages`。
+5. 使用同一个 `PUBLIC_HOST` 打包 Teams 应用。
+6. 上传应用包并在 Teams 中测试。
+
+不能提前用未知或占位域名制作最终测试包，因为 Teams manifest 的 `validDomains`、隐私地址和条款地址都会写入该公网域名。
+
 先启动服务并确认本地健康检查正常：
 
 ```bash
@@ -304,6 +315,24 @@ curl https://YOUR_NAME.ngrok-free.app/health
 
 模板位于 `teams_app/manifest.json`，图标已经按 Teams 要求生成：`color.png` 为 192×192，`outline.png` 为 32×32。
 
+执行本节前，应已通过 ngrok 或其他 Tunnel 取得可访问的 HTTPS 域名，并完成公网 `/health` 验证。Azure Bot 配置和 Teams 应用包必须使用同一个域名。例如 ngrok 返回：
+
+```text
+https://abc123.ngrok-free.app
+```
+
+则 Azure Bot Messaging endpoint 应为：
+
+```text
+https://abc123.ngrok-free.app/api/messages
+```
+
+打包命令中的 `--host` 应为：
+
+```text
+abc123.ngrok-free.app
+```
+
 1. 将 manifest 中所有 `${MICROSOFT_APP_ID}` 替换为 Entra Application ID。
 2. 将 `YOUR_PUBLIC_HOST` 替换为不带协议和路径的公网域名；`websiteUrl`、`privacyUrl`、`termsOfUseUrl` 仍需保留 `https://`。
 3. 只把以下三个文件放在 zip 根目录：
@@ -326,6 +355,8 @@ python scripts/package_teams_app.py \
 ```
 
 `--host` 只能填写域名，例如 `random-name.trycloudflare.com`，不能包含 `https://` 或 `/api/messages`。产物为 `dist/flowmate-teams.zip`。脚本会替换 manifest 占位符、检查 App ID 与 Bot ID 是否一致，并确保 zip 根目录只包含三个必需文件。可以用 `--output` 指定其他输出位置。
+
+如果免费 Tunnel 重启后生成了新域名，旧应用包不应继续用于测试。需要更新 Azure Bot Messaging endpoint，使用新域名重新运行打包脚本，并将新 zip 上传到 Teams。
 
 > Teams 中上传的 zip 只是应用清单和图标，不包含服务端。上传前还必须先部署本项目后端，并将 Azure Bot 的 Messaging Endpoint 配置为 `https://bot.example.com/api/messages`。
 
