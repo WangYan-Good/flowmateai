@@ -1,0 +1,23 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+dist/
+
+# Microsoft 365 Agents Toolkit
+env/.env.*.user
+env/.env.local
+.localConfigs.playground
+.localConfigs
+.notification.localstore.json
+.notification.playgroundstore.json
+appPackage/build
+.deployment
+/devTools/
+
+# Node.js tooling
+node_modules/
+
+# OS metadata
+.DS_Store
