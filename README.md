@@ -80,6 +80,35 @@ cp .env.example .env
 uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+### 使用 Conda（推荐用于 Windows）
+
+项目提供 `environment.yml`，固定 Python 3.11、pip 和全部直接依赖版本。已安装 Miniconda 或 Anaconda 后，在 Anaconda Prompt 或已初始化 Conda 的 PowerShell 中执行：
+
+```powershell
+conda env create -f environment.yml
+conda activate flowmate
+python -c "from typing import NotRequired; print('Python typing OK')"
+python -m unittest discover -s tests -v
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
+```
+
+第一次启动前，如果还没有 `.env`，按模型供应商复制模板并填写 API Key：
+
+```powershell
+Copy-Item .env.deepseek.example .env
+# 或：Copy-Item .env.qwen.example .env
+```
+
+已有同名环境时，按锁定配置更新：
+
+```powershell
+conda env update -n flowmate -f environment.yml --prune
+conda activate flowmate
+python -m pip check
+```
+
+Conda 环境下不要运行 `start-windows.cmd`，因为该脚本会另外创建并使用 `.venv`。请在激活 `flowmate` 后直接执行上面的 `python -m uvicorn` 命令。若 pip 显示 `from versions: none`，说明当前 pip 源或公司代理不可用，并非 Pydantic 不支持 Python 3.11；先检查 `python -m pip config list -v` 和代理配置。
+
 或使用 Docker：
 
 ```bash
